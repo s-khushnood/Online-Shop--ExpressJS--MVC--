@@ -8,17 +8,18 @@ const p = path.join(
 );
 
 const getProductsFromFile = cb => {
-  fs.readFile(p, (err, fileContent) => {
-    if (err) {
-      cb([]);
-    } else {
-      cb(JSON.parse(fileContent));
-    }
-  });
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        cb([]);
+      } else {
+        cb(JSON.parse(fileContent))
+      }
+    });
 };
 
 module.exports = class Product {
   constructor(title, imageUrl, description, price) {
+    this.id =Date.now();
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;

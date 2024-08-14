@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const Product = require('./product');
 
 const p = path.join(
   path.dirname(process.mainModule.filename),
@@ -18,27 +19,51 @@ const getProductsFromFile = cb => {
 };
 
 module.exports = class Cart {
-  static addProductToCart(title,item,price) {
+  static addProductToCart(id) {
     getProductsFromFile(products => {
       let totalPrice=0;
       products.push({
-        title:title,
-        item:item,
-        price:price,
-      });
-      products.forEach(element => {
-        totalPrice=parseFloat(totalPrice)+parseFloat(element.price);
-      });
-      products.forEach(element => {
-        element['totalPrice']=totalPrice;
+        id:Date.now(),
+        productId:id
       });
       fs.writeFile(p, JSON.stringify(products), err => {
         console.log(err);
       });
     });
   }
+  static removeProductFromCart(id){
+    let newProducts=[];
+    getProductsFromFile(products => {
+      products.forEach((x)=>{
+        if(String(x.id)!=String(id)){
+          newProducts.push(x);
+        }
+      })
+      fs.writeFile(p, JSON.stringify(newProducts), err => {
+        console.log(err);
+      });
+      });
+  }
 
   static fetchAll(cb) {
-    getProductsFromFile(cb);
+    let products=[];
+    let cartItems=[];
+    let totalPrice=0;
+    let cartItemsList=[];
+    Product.fetchAll(_products=>{
+      products=_products;
+      getProductsFromFile((_cartItems)=>{
+        cartItems=_cartItems;
+        cartItems.forEach((item)=>{
+          products.forEach((product)=>{
+            if(String(item.productId)==String(product.id)){
+              totalPrice=totalPrice+Number(product.price);
+              cartItemsList.push({id:item.id,product});
+            }
+          })
+        })
+        cb({cartItemsList:cartItemsList,totalPrice:totalPrice.toFixed(2)});
+      });
+    })
   }
 };

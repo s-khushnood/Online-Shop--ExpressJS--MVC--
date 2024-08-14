@@ -1,23 +1,36 @@
 <%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/product.css">
     </head>
 
     <body>
         <%- include('../includes/navigation.ejs') %>
         <main>
             <% if (prods.length > 0) { %>
-                <h3 style="text-align: center;">Total Price of All Products is: $<%= prods[0]['totalPrice'] %></h3>
+                <h3 style="text-align: center;">Total Price of All Products is: $<%= totalPrice %></h3>
                 <div class="grid">
                     <% for (let product of prods) { %>
                         <article class="card product-item">
                             <header class="card__header">
                                 <h1 class="product__title">
-                                    <%= product.title %>
+                                    <%= product.product.title %>
                                 </h1>
                             </header>
+                            <div class="card__image">
+                                <img src="<%= product.product.imageUrl %>" alt="<%= product.product.title %>">
+                            </div>
                             <div class="card__content">
                                 <h2 class="product__price">$
-                                    <%= product.price %>
+                                    <%= product.product.price %>
                                 </h2>
+                                <p class="product__description">
+                                    <%= product.product.description %>
+                                </p>
+                            </div>
+                            <div class="card__actions">
+                                <form action="/remove-from-cart" method="POST">
+                                    <input type="hidden" name="id" value="<%= product.id %>" />
+                                    <button class="btn" type="submit">Remove From Cart</button>
+                                </form>
                             </div>
                         </article>
                         <% } %>

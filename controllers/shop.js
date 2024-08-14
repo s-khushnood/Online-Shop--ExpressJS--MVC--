@@ -21,18 +21,24 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  Cart.fetchAll(products => {
-    res.render('shop/cart', {
-      prods: products,
-      pageTitle: 'Your Cart',
-      path: '/cart'
-    });
-  });
+ Cart.fetchAll((cb)=>{
+   res.render('shop/cart', {
+     prods: cb.cartItemsList,
+     pageTitle: 'Your Cart',
+     path: '/cart',
+     totalPrice:cb.totalPrice
+   });
+ });
 };
 
 exports.addToCart = (req, res, next) => {
-  Cart.addProductToCart(req.body.title,req.body.item,req.body.price);
+  Cart.addProductToCart(req.body.id);
   res.redirect('/');
+};
+
+exports.removeFromCart = (req, res, next) => {
+  Cart.removeProductFromCart(req.body.id);
+  res.redirect('/cart');
 };
 
 exports.getOrders = (req, res, next) => {
