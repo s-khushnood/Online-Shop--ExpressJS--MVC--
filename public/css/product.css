@@ -10,6 +10,10 @@
     max-width: 95%;
     margin: 1rem;
 }
+.product-item:hover	{
+    box-shadow: 10px 10px 10px black;
+    background-color: bisque;
+}
 
 .product__title {
     font-size: 1.2rem;
